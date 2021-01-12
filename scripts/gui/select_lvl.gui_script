@@ -1,0 +1,44 @@
+
+local app = require('scripts.service.app')
+local loader_scenes = require('scripts.modules.loader_scenes')
+local list_scenes = require('scripts.start_modules.list_scenes')
+local druid = require("druid.druid")
+local menager_box_select_lvl = require('scripts.modules.select_lvl.menager_box_select_lvl')
+local menager_energy = require('scripts.modules.menager_energy')
+
+local config = app.config
+local game_messages = app.game_messages
+local game_components = app.game_components
+
+local function on_window_callback(self, event, data)
+	druid.on_window_callback(event, data)
+end
+
+local function scroll_select_lvl(self)
+	self.druid:new_scroll(game_components.scroll, game_components.content)
+end
+
+function init(self)
+	menager_box_select_lvl.spawn_buttons(self)
+	self.druid = druid.new(self)
+	scroll_select_lvl(self)
+	window.set_listener(on_window_callback)
+end
+
+function update(self, dt)
+	self.druid:update(dt)
+end
+
+
+function on_message(self, message_id, message, sender)
+	self.druid:on_message(message_id, message, sender)
+end
+
+
+function on_input(self, action_id, action)
+	self.druid:on_input(action_id, action)
+	if menager_box_select_lvl.touch_button(self, action_id, action) then
+		menager_energy.take_energy()
+		loader_scenes.show_scene(list_scenes.game_level)
+	end
+end

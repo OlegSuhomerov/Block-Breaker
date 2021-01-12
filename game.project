@@ -1,0 +1,38 @@
+[bootstrap]
+main_collection = /scenes/_init.collectionc
+render = /rendercam/rendercam.renderc
+
+[script]
+shared_state = 1
+
+[display]
+width = 360
+height = 640
+
+[android]
+input_method = HiddenInputField
+
+[project]
+title = Block Breaker
+dependencies = https://github.com/rgrams/rendercam/archive/v1.0.1.zip,https://github.com/subsoap/defsave/archive/master.zip,https://github.com/britzl/monarch/archive/master.zip,https://github.com/Insality/druid/archive/master.zip
+custom_resources = scripts/json
+
+[physics]
+allow_dynamic_transforms = 1
+gravity_y = 0.0
+scale = 0.1
+max_collisions = 128
+max_contacts = 256
+
+[sprite]
+max_count = 1024
+
+[input]
+game_binding = /input/game.input_bindingc
+
+[particle_fx]
+max_count = 1024
+
+[factory]
+max_count = 256
+

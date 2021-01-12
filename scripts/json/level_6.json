@@ -1,0 +1,47 @@
+{
+	"dimension": {"strings": 9, "columns": 6},
+	"block_list": {
+		9: {
+			"group_settings":12
+		},
+		15: {
+			"group_settings":9
+		},
+		16: {
+			"group_settings":11
+		},
+		21: {
+			"group_settings":1
+		},
+		22: {
+			"group_settings":9
+		},
+		23: {
+			"group_settings":11
+		},
+		27: {
+			"group_settings":7
+		},
+		28: {
+			"group_settings":9
+		},
+		33: {
+			"group_settings":1
+		},
+		34: {
+			"group_settings":9
+		},
+		35: {
+			"group_settings":16
+		},
+		39: {
+			"group_settings":9
+		},
+		40: {
+			"group_settings":12
+		},
+		45: {
+			"group_settings":13
+		}
+	}
+}

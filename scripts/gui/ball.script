@@ -1,0 +1,82 @@
+
+go.property('id_ball', 0)
+
+local app = require('scripts.service.app')
+local input_ball = require('scripts.modules.ball.input_ball')
+local rendercam = require('rendercam.rendercam')
+local menager_ball = require('scripts.modules.ball.menager_ball')
+local speed_ball = require('scripts.modules.ball.speed_ball')
+
+local game_messages = app.game_messages
+local game_components = app.game_components
+local config = app.config
+local go_constants = app.go_constants
+local list_ball = menager_ball.list
+
+local function fire_ball()
+	if config.block_damage == config.bonus_damage_ball then
+		return
+	end
+	particlefx.play(game_components.particles_fire_ball)
+	local first_damage = config.block_damage
+	config.block_damage = config.bonus_damage_ball
+	timer.delay(3, false, function()
+		particlefx.stop(game_components.particles_fire_ball)
+		config.block_damage = first_damage
+	end)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == game_messages.trigger_response and message.enter then
+		menager_ball.ball_not_play(self)
+		
+	elseif message_id == game_messages.contact_point_response then
+		local speed = go.get(menager_ball.list[self.id_ball].collision_url, game_messages.linear_velocity)
+		speed_ball.check_slow_speed(speed, menager_ball.list[self.id_ball].collision_url)
+
+	elseif message_id == game_messages.bonus_speed_ball_up then
+		speed_ball.boost_bonus_speed_up(menager_ball.list[self.id_ball].collision_url)
+
+	elseif message_id == game_messages.bonus_speed_ball_down then
+		speed_ball.boost_bonus_speed_down(menager_ball.list[self.id_ball].collision_url)
+		
+	elseif message_id == game_messages.bonus_fire_ball then
+		fire_ball()
+	end
+end
+
+local function check_first_ball(self)
+	if list_ball[self.id_ball].first_ball then
+		return true
+	end
+end
+
+local function first_ball(self)
+	if check_first_ball(self) ~= true then
+		return false
+	end
+	timer.delay(0.3, false, function()
+		msg.post(".", game_messages.acquire_input_focus)
+		self.ball_start = false
+	end)
+end
+
+function init(self)
+	self.factor_speed = 1
+	list_ball[self.id_ball].url = msg.url(".")
+	list_ball[self.id_ball].collision_url = msg.url(nil, list_ball[self.id_ball].hash, game_components.collisionobject)
+	if first_ball(self) == false then
+		speed_ball.speed_bonus_object(self, list_ball[self.id_ball].collision_url)
+	end
+end
+
+function on_input(self, action_id, action)
+	if self.ball_start == false then
+		if input_ball.start(self, action_id, action) then
+			speed_ball.create_speed_object(self, menager_ball.list[self.id_ball].collision_url)
+			msg.post(".", game_messages.release_input_focus)
+			msg.post(game_components.platform, game_messages.acquire_input_focus)
+		end
+	end
+end
+

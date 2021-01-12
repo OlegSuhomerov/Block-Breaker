@@ -1,0 +1,31 @@
+
+go.property('hp', 2)
+go.property('id_color', 1)
+go.property('bonus_id', 0)
+go.property('invulnerability', false)
+go.property('id', 0)
+
+local app = require('scripts.service.app')
+local block_hp = require('scripts.modules.block.block_hp')
+local sprite_block = require('scripts.modules.block.sprite_block')
+local menager_ball = require('scripts.modules.ball.menager_ball')
+local menager_count_blocks = require('scripts.modules.block.menager_count_blocks')
+local spawn_particles = require('scripts.modules.spawn_particles')
+
+local config = app.config
+local game_messages = app.game_messages
+
+function init(self)
+	sprite_block.idle(self.id_color)
+	self.start_hp = self.hp
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == game_messages.contact_point_response and not self.invulnerability then
+		block_hp.pick_up(self)
+	elseif message_id == game_messages.delete_block then
+		menager_ball.boost()
+		spawn_particles.blocks_break(self.id_color)
+		menager_count_blocks.block_delete(self)
+	end
+end

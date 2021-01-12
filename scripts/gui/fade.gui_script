@@ -1,0 +1,17 @@
+
+
+
+local transitions = require "monarch.transitions.gui"
+local monarch = require "monarch.monarch"
+
+function init(self)
+	self.transition = transitions.create(gui.get_node("fade"))
+	.show_in(transitions.fade_out, gui.EASING_OUTQUAD, 1, 0)
+	.show_out(transitions.fade_in, gui.EASING_OUTQUAD, 1, 0)
+	.back_in(transitions.slide_in_left, gui.EASING_OUTQUAD, 0.6, 0)
+	.back_out(transitions.slide_out_right, gui.EASING_INQUAD, 0.6, 0)
+end
+
+function on_message(self, message_id, message, sender)
+	self.transition.handle(message_id, message, sender)
+end

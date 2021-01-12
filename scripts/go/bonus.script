@@ -1,0 +1,36 @@
+
+local app = require('scripts.service.app')
+local bonus_menager = require('scripts.modules.bonus_menager')
+
+go.property('bonus_id', 0)
+
+local config = app.config
+local game_messages = app.game_messages
+
+function init(self)
+	self.pos = go.get_position()
+	msg.post(".", game_messages.play_animation, {id = hash(config.object_bonus[self.bonus_id].sprite)})
+	self.delete = false
+end
+
+local function move_object(self)
+	self.pos.y = self.pos.y - config.speed_bonus
+	return self.pos
+end
+
+function update(self, dt)
+	local pos = move_object(self)
+	go.set_position(pos)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == game_messages.trigger_response and self.delete == false then
+		self.delete = true
+		go.delete()
+	elseif message_id == game_messages.contact_point_response and self.delete == false then
+		self.delete = true
+		bonus_menager.contact_bonus_platform(self)
+		go.delete()
+	end
+	
+end

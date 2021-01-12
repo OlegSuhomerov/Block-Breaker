@@ -1,0 +1,15 @@
+
+local app = require('scripts.service.app')
+
+local config = app.config
+local game_messages = app.game_messages
+
+local function spawn_bonus(message)
+	factory.create(game_components.factory_bonus, message.cords, nil, {bonus_id = message.bonus_id})
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == game_messages.spawn_bonus then
+		spawn_bonus(message)
+	end
+end

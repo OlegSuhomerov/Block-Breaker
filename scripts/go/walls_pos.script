@@ -1,0 +1,42 @@
+
+local app = require('scripts.service.app')
+
+local camera = app.camera
+local game_components = app.game_components
+local config = app.config
+local game_messages = app.game_messages
+
+local function set_pos_walls(self)
+
+	local left_wall_pos_x = camera.left_bottom.x
+	local left_wall_pos_y = camera.center.y
+	local left_wall_pos = vmath.vector3(left_wall_pos_x, left_wall_pos_y, 1)
+	go.set_position(left_wall_pos, game_components.wall_left)
+
+	local right_wall_pos_x = camera.right_top.x
+	local right_wall_pos_y = camera.center.y
+	local right_wall_pos = vmath.vector3(right_wall_pos_x, right_wall_pos_y, 1)
+	go.set_position(right_wall_pos, game_components.wall_right)
+	
+	local up_wall_pos_x = camera.center.x
+	local top_indent = camera.hight * config.percent_indent_wall_up
+	local up_wall_pos_y = camera.right_top.y - top_indent
+	local up_wall_pos = vmath.vector3(up_wall_pos_x, up_wall_pos_y, 1)
+	go.set_position(up_wall_pos, game_components.wall_up)
+
+	local down_wall_x = camera.center.x
+	local down_indent = camera.hight * config.percent_indent_wall_up
+	local down_wall_y = camera.left_bottom.y - down_indent
+	local down_wall_pos = vmath.vector3(down_wall_x, down_wall_y, 1)
+	go.set_position(down_wall_pos, game_components.wall_down)
+end
+
+function init(self)
+	set_pos_walls(self)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == game_messages.window_changed then
+		set_pos_walls(self)
+	end
+end

@@ -1,0 +1,48 @@
+
+local app = require('scripts.service.app')
+local input_platform = require('scripts.modules.platform.input_platform')
+
+local camera = app.camera
+local config = app.config
+local game_messages = app.game_messages
+local game_components = app.game_components
+
+local function start_pos(self)
+
+	local indent = camera.left_bottom.y + (self.size_platform.y * config.indent_platform)
+
+	local start_position = vmath.vector3(camera.center.x, indent, 1)
+	self.pos = start_position
+	go.set_position(start_position)
+
+end
+
+function init(self)
+	camera.get_pos()
+	
+	self.size_platform = go.get(game_components.platform_sprite, game_messages.size)
+	msg.post(game_components.balls, game_messages.size_platfotm, {size_platform = self.size_platform})
+	start_pos(self)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == game_messages.respawn_platform then
+		start_pos(self)
+		
+	elseif message_id == game_messages.bonus_speed_platform_up then
+		config.speed_platform = config.speed_platform + config.bonus_speed_platform
+		
+	elseif message_id == game_messages.bonus_speed_platform_down then
+		config.speed_platform = config.speed_platform - config.bonus_speed_platform
+		pprint(config.speed_platform)
+	end
+end
+
+function final(self)
+	msg.post(".", game_messages.release_input_focus)
+end
+
+function on_input(self, action_id, action)
+	input_platform.move(self, action, action_id)
+end
+

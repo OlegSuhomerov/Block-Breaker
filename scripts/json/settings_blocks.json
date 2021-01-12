@@ -1,0 +1,68 @@
+{
+  "settings": [
+    {
+      "count_hp": 1,
+      "id_color": 1
+    },
+    {
+      "count_hp": 2,
+      "id_color": 2
+    },
+    {
+      "count_hp": 3,
+      "id_color": 3
+    },
+    {
+      "bonus_id": 1,
+      "id_color": 4
+    },
+    {
+      "bonus_id": 2,
+      "id_color": 5
+    },
+    {
+      "bonus_id": 3,
+      "id_color": 6
+    },
+    {
+      "bonus_id": 4,
+      "id_color": 7
+    },
+    {
+      "bonus_id": 5,
+      "id_color": 8
+    },
+    {
+      "invulnerability": true,
+      "id_color": 9
+    },
+    {
+      "bonus_id": 6,
+      "id_color": 10
+    },
+    {
+      "bonus_id": 7,
+      "id_color": 11
+    },
+    {
+      "bonus_id": 8,
+      "id_color": 12
+    },
+    {
+      "bonus_id": 9,
+      "id_color": 13
+    },
+    {
+      "bonus_id": 10,
+      "id_color": 14
+    },
+    {
+      "bonus_id": 11,
+      "id_color": 15
+    },
+    {
+      "bonus_id": 12,
+      "id_color": 16
+    }
+  ]
+}

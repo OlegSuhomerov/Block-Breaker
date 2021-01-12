@@ -1,0 +1,53 @@
+{
+	"dimension": {"strings": 8, "columns": 4},
+	"block_list": {
+		1: {
+			"group_settings":7
+		},
+		4: {
+			"group_settings":1
+		},
+		6: {
+			"group_settings":15
+		},
+		7: {
+			"group_settings":10
+		},
+		9: {
+			"group_settings":3
+		},
+		12: {
+			"group_settings":1
+		},
+		14: {
+			"group_settings":12
+		},
+		15: {
+			"group_settings":11
+		},
+		18: {
+			"group_settings":13
+		},
+		19: {
+			"group_settings":11
+		},
+		21: {
+			"group_settings":3
+		},
+		24: {
+			"group_settings":1
+		},
+		26: {
+			"group_settings":14
+		},
+		27: {
+			"group_settings":8
+		},
+		29: {
+			"group_settings":3
+		},
+		32: {
+			"group_settings":1
+		}
+	}
+}

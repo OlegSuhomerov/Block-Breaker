@@ -1,0 +1,58 @@
+
+local app = require('scripts.service.app')
+local loader_scenes = require('scripts.modules.loader_scenes')
+local list_scenes = require('scripts.start_modules.list_scenes')
+local anim_button = require('scripts.modules.gui.anim_button')
+local menager_energy = require('scripts.modules.menager_energy')
+local record = require('scripts.service.record')
+
+local config = app.config
+local game_messages = app.game_messages
+local game_components = app.game_components
+
+local function set_count_enegry(count_energy)
+	local node = gui.get_node(game_components.count_energy)
+	gui.set_text(node, count_energy)
+end
+
+local function update_energy(self)
+	local timer = menager_energy.print_timer()
+	if timer == false then
+		gui.set_text(self.node_timer, '')
+		return
+	end
+	if timer == true then
+		gui.set_text(self.node_energy, record.save_data.energy.count)
+	end
+	gui.set_text(self.node_timer, timer)
+end
+
+function init(self)
+	msg.post(".", game_messages.acquire_input_focus)
+	self.first_run = record.load_save()
+	local count_energy = menager_energy.init()
+	set_count_enegry(count_energy)
+	self.node_timer = gui.get_node(game_components.time_energy)
+	self.node_energy = gui.get_node(game_components.count_energy)
+end
+
+function update(self, dt)
+	update_energy(self)
+end
+
+function on_input(self, action_id, action)
+	local node_play = gui.get_node(game_components.bt_play)
+
+	anim_button.animation(game_components.bt_play, self, action_id, action)
+
+	if gui.pick_node(node_play, action.x, action.y) and action.released then
+		if self.first_run then
+			config.select_lvl = config.start_level
+			config.select_chapter = config.start_chapter
+			menager_energy.take_energy() 
+			loader_scenes.show_scene(list_scenes.game_level)
+		elseif menager_energy.check_price_energy() then
+			loader_scenes.show_scene(list_scenes.select_lvl)
+		end
+	end
+end

@@ -1,0 +1,57 @@
+
+local app = require('scripts.service.app')
+local json_parser = require('scripts.service.json_parser')
+local init_spawn_block = require('scripts.modules.block.init_spawn_block')
+local position_block = require('scripts.modules.block.position_block')
+local get_matrix_blocks = require('scripts.modules.block.get_matrix_blocks')
+local menager_count_blocks = require('scripts.modules.block.menager_count_blocks')
+
+local camera = app.camera
+local config = app.config
+local game_components = app.game_components
+local game_messages = app.game_messages
+
+local function adding_properties(k,self)
+	local properties = {hp = self.blocks_data[k].settings.count_hp, id_color = self.blocks_data[k].settings.id_color, id = k}
+	if self.blocks_data[k].settings.bonus_id ~= nil then
+		properties.bonus_id = self.blocks_data[k].settings.bonus_id
+	elseif self.blocks_data[k].settings.invulnerability then
+		properties.invulnerability = true
+	end
+	return properties
+end
+
+local function get_data_block(self)
+	return get_matrix_blocks.get_data(config.select_lvl)
+end
+
+local function build_board(self)
+	self.scale = init_spawn_block.block_scale(self)
+	
+	for k,v in pairs(self.blocks_data) do
+		local position = position_block.pos_blocks(self, self.blocks_data[k].pos.i, self.blocks_data[k].pos.j)
+		local properties = adding_properties(k,self)
+	
+		menager_count_blocks.list[k] = {}
+		menager_count_blocks.list[k].url = factory.create(game_components.factory_block, position, nil, properties, self.scale)
+		menager_count_blocks.list[k].pos = self.blocks_data[k].pos
+		menager_count_blocks.list[k].cords = position
+		menager_count_blocks.list[k].settings = self.blocks_data[k].settings
+	end
+	menager_count_blocks.init(self)
+end
+
+function init(self)
+	self.blocks_data, self.dimension = get_data_block()
+	build_board(self)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == game_messages.respawn_blocks then
+		if menager_count_blocks.delete_all_blocks() then
+			self.blocks_data, self.dimension = nil
+			self.blocks_data, self.dimension = get_data_block()
+			build_board(self)
+		end
+	end
+end

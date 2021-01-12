@@ -1,0 +1,38 @@
+{
+	"dimension": {"strings": 5, "columns": 4},
+	"block_list": {
+		3: {
+			"group_settings":1
+		},
+		6: {
+			"group_settings":1
+		},
+		7: {
+			"group_settings":1
+		},
+		8: {
+			"group_settings":1
+		},
+		10: {
+			"group_settings":1
+		},
+		11: {
+			"group_settings":4
+		},
+		12: {
+			"group_settings":1
+		},
+		14: {
+			"group_settings":1
+		},
+		15: {
+			"group_settings":1
+		},
+		16: {
+			"group_settings":1
+		},
+		19: {
+			"group_settings":1
+		}
+	}
+}

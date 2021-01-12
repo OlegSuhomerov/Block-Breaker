@@ -1,0 +1,95 @@
+{
+	"dimension": {"strings": 10, "columns": 6},
+	"block_list": {
+		2: {
+			"group_settings":5
+		},
+		4: {
+			"group_settings":6
+		},
+		6: {
+			"group_settings":2
+		},
+		7: {
+			"group_settings":5
+		},
+		9: {
+			"group_settings":6
+		},
+		11: {
+			"group_settings":2
+		},
+		14: {
+			"group_settings":6
+		},
+		16: {
+			"group_settings":2
+		},
+		18: {
+			"group_settings":1
+		},
+		19: {
+			"group_settings":6
+		},
+		21: {
+			"group_settings":2
+		},
+		23: {
+			"group_settings":1
+		},
+		26: {
+			"group_settings":2
+		},
+		28: {
+			"group_settings":1
+		},
+		30: {
+			"group_settings":3
+		},
+		31: {
+			"group_settings":2
+		},
+		33: {
+			"group_settings":1
+		},
+		35: {
+			"group_settings":3
+		},
+		38: {
+			"group_settings":1
+		},
+		40: {
+			"group_settings":3
+		},
+		42: {
+			"group_settings":11
+		},
+		43: {
+			"group_settings":1
+		},
+		45: {
+			"group_settings":3
+		},
+		47: {
+			"group_settings":11
+		},
+		50: {
+			"group_settings":3
+		},
+		52: {
+			"group_settings":11
+		},
+		54: {
+			"group_settings":10
+		},
+		55: {
+			"group_settings":3
+		},
+		57: {
+			"group_settings":11
+		},
+		59: {
+			"group_settings":10
+		}
+	}
+}

@@ -1,0 +1,66 @@
+
+local app = require('scripts.service.app')
+local menager_ball = require('scripts.modules.ball.menager_ball')
+
+local camera = app.camera
+local config = app.config
+local game_messages = app.game_messages
+local game_components = app.game_components
+local go_constants = app.go_constants
+local size_platform = config.size_platform
+
+local function start_pos(self)
+	local indent = camera.left_bottom.y + (size_platform.y * config.indent_ball)
+	local start_position = vmath.vector3(camera.center.x, indent, 1)
+	return start_position
+end
+
+local function check_first_ball()
+	local first_ball = true
+	for k in pairs(menager_ball.list) do
+		if menager_ball.list[k] ~= nil then
+			first_ball = false
+		end
+	end
+	return first_ball
+end
+
+local function create_ball(self, pos)
+	local id_ball = #menager_ball.list + 1
+	if check_first_ball() then
+		menager_ball.list[id_ball] = {}
+		menager_ball.list[id_ball].first_ball = true
+	else
+		menager_ball.list[id_ball] = {}
+	end
+	menager_ball.list[id_ball].hash = factory.create(game_components.factory_ball, pos, nil, {id_ball = id_ball})
+end
+
+function init(self)
+	self.pos = start_pos(self)
+	msg.post(".", game_messages.respawn_ball)
+end
+
+function final(self)
+	menager_ball.check_absence_ball()
+	menager_ball.list = {}
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == game_messages.size_platfotm then
+		size_platform = message.size_platform
+	end
+	if message_id == game_messages.respawn_ball then
+		menager_ball.check_absence_ball()
+		create_ball(self, self.pos)
+	end
+	if message_id == game_messages.stop_all_ball then
+		menager_ball.stop_all_ball()
+	end
+	if message_id == game_messages.play_all_ball then
+		menager_ball.play_all_ball()
+	end
+	if message_id == game_messages.create_ball then
+		create_ball(self, message.pos)
+	end
+end

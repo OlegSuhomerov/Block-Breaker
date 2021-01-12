@@ -1,0 +1,33 @@
+
+math.randomseed(socket.gettime())
+math.random(100)
+
+local app = require('scripts.service.app')
+
+local game_messages = app.game_messages
+local game_components = app.game_components
+local loader_scenes = app.loader_scenes
+local list_scenes = app.list_scenes
+
+local function update_win_size()
+	app.camera.get_pos()
+	msg.post(game_components.walls_pos, game_messages.window_changed)
+end
+
+local function win_callback(self, event, data)
+	if event == window.WINDOW_EVENT_RESIZED then
+		timer.delay(0.1, false, update_win_size)
+	end
+end
+
+function init(self)
+	msg.post(game_components.myself, game_messages.show_start_scenes)
+
+	window.set_listener(win_callback)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash(game_messages.show_start_scenes) then
+		loader_scenes.show_scene(list_scenes.menu)
+	end
+end

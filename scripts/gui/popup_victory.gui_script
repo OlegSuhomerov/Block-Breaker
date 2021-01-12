@@ -1,0 +1,63 @@
+
+local transitions = require "monarch.transitions.gui"
+local monarch = require "monarch.monarch"
+local app = require('scripts.service.app')
+local loader_scenes = require('scripts.modules.loader_scenes')
+local list_scenes = require('scripts.start_modules.list_scenes')
+local anim_button = require('scripts.modules.gui.anim_button')
+local restart = require('scripts.modules.restart')
+local menager_ball = require('scripts.modules.ball.menager_ball')
+local menager_levels = require('scripts.modules.select_lvl.menager_levels')
+
+local game_components = app.game_components
+local config = app.config
+local game_messages = app.game_messages
+
+local function transition_monarch(self)
+	self.transition = transitions.create(gui.get_node(game_components.popup_victory))
+	.show_in(transitions.slide_in_bottom, gui.EASING_OUTQUART, 1, 0)
+	.show_out(transitions.slide_out_top, gui.EASING_INQUART, 0.3, 0.0)
+	.back_in(transitions.slide_in_bottom, gui.EASING_INQUART, 0.5, 0.0)
+	.back_out(transitions.slide_out_top, gui.EASING_INQUART, 0.5, 0.0)
+end
+
+local function showing_lvl()
+	local node = gui.get_node(game_components.lvl_info)
+	gui.set_text(node, config.select_lvl)
+end
+
+function init(self)
+	transition_monarch(self)
+	msg.post(game_components.balls, game_messages.stop_all_ball)
+	msg.post(".", game_messages.acquire_input_focus)
+	showing_lvl()
+	local particles_node = gui.get_node(game_components.victory_salute)
+	gui.play_particlefx(particles_node)	
+end
+
+function on_message(self, message_id, message, sender)
+	self.transition.handle(message_id, message, sender)
+end
+
+function on_input(self, action_id, action)
+	local node_menu = gui.get_node(game_components.bt_menu)
+	local node_restart = gui.get_node(game_components.bt_restart)
+	local node_next = gui.get_node(game_components.bt_next)
+	
+	anim_button.animation(game_components.bt_menu, self, action_id, action)
+	anim_button.animation(game_components.bt_restart, self, action_id, action)
+	anim_button.animation(game_components.bt_next, self, action_id, action)
+
+	if gui.pick_node(node_menu, action.x, action.y) and action.released then
+		loader_scenes.show_scene(list_scenes.menu)
+	elseif gui.pick_node(node_restart, action.x, action.y) and action.released then
+		loader_scenes.hide_scene(list_scenes.popup_victory)
+		restart.restart_game()
+		
+	elseif gui.pick_node(node_next, action.x, action.y) and action.released then
+		if menager_levels.next_level() then
+			restart.restart_game()
+		end
+		loader_scenes.hide_scene(list_scenes.popup_victory)
+	end
+end
